@@ -5,9 +5,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
-class ValoresEconomico extends Model
+class Valores extends Model
 {
-    protected $table = 'valores_economico';
+    protected $table = 'valores';
 
     public function transportadora()
     {
@@ -18,7 +18,7 @@ class ValoresEconomico extends Model
     {
         parent::boot();
 
-        static::addGlobalScope('pesopadrao', function(Builder $builder) {
+        static::addGlobalScope('peso_padrao', function(Builder $builder) {
             $builder->where('kg_adicional', 0);
         });
     }

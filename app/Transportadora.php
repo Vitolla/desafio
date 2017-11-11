@@ -23,14 +23,9 @@ class Transportadora extends Model
         return $this->hasOne('App\RegrasExpresso');
     }
 
-    public function valores_economico()
+    public function valores()
     {
-        return $this->hasMany('App\ValoresEconomico');
-    }
-
-    public function valores_expresso()
-    {
-        return $this->hasMany('App\ValoresExpresso');
+        return $this->hasMany('App\Valores');
     }
 
 
