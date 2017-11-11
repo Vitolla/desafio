@@ -15,6 +15,25 @@ class GlobalController extends Controller
 {
     public function show()
     {
-        return view('welcome');
+        return view('layouts.home');
+    }
+
+    public function calcula()
+    {
+
+        $origem = \Request::input('origem');
+        $destino = \Request::input('destino');
+        $altura = \Request::input('altura');
+        $largura = \Request::input('largura');
+        $comprimento = \Request::input('comprimento');
+        $peso = \Request::input('peso');
+        $valor = \Request::input('valor');
+        $ar = \Request::input('ar');
+        $mp = \Request::input('mp');
+
+
+
+
+        dump(\Request::all());
     }
 }
