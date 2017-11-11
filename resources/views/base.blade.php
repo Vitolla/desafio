@@ -17,6 +17,10 @@
             </div>
 
         </div>
+
+        <script type="text/javascript">
+            var baseUrl = '{{url('/')}}';
+        </script>
     </body>
     @include('includes.footer')
 </html>

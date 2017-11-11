@@ -23,17 +23,27 @@ class GlobalController extends Controller
 
         $origem = \Request::input('origem');
         $destino = \Request::input('destino');
+        $adicionar = \Request::input('adicionar');
+
         $altura = \Request::input('altura');
         $largura = \Request::input('largura');
         $comprimento = \Request::input('comprimento');
         $peso = \Request::input('peso');
-        $valor = \Request::input('valor');
+        $seguro = \Request::input('seguro');
         $ar = \Request::input('ar');
         $mp = \Request::input('mp');
 
+        $test[]=$origem;
+        $test[]=$destino;
+        $test[]=$adicionar;
+        $test[]=$altura;
+        $test[]=$largura;
+        $test[]=$comprimento;
+        $test[]=$peso;
+        $test[]=$seguro;
+        $test[]=$ar;
+        $test[]=$mp;
 
-
-
-        dump(\Request::all());
+        return $test;
     }
 }

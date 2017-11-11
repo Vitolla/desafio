@@ -12,4 +12,4 @@
 */
 
 Route::get('/', ['as' => 'home', 'uses' => 'GlobalController@show']);
-Route::post('/', ['as' => 'calcula', 'uses' => 'GlobalController@calcula']);
+Route::post('/calcula', ['as' => 'calcula', 'uses' => 'GlobalController@calcula']);
