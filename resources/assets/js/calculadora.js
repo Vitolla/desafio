@@ -11,12 +11,13 @@ $(document).ready( function() {
 
 
     //QUANDO INSERE ALGUM DIGITO
-    $('#origem').on("input", function() {
+    $('.cep').on("input", function() {
         var cep = $(this).val().replace(/\D/g, '');
 
         //VERIFICA SE CEP TEM 8 DIGITOS
         if(cep.length === 8){
             var url = 'https://viacep.com.br/ws/'+cep+'/json/';
+            var elemento = $(this);
 
             $.ajax({
                 type: "GET",
@@ -30,8 +31,8 @@ $(document).ready( function() {
                     else{
                         //SEM ERRO
                         console.log(data);
-                        console.log(data.bairro);
-                        console.log(data.cidade);
+                        elemento.parent().find(".data-estado").val(data.uf);
+                        elemento.parent().find(".data-codigo-ibge").val(data.ibge);
                     }
                 },
                 error: function(data) {
@@ -53,7 +54,11 @@ $(document).ready( function() {
             data: {
                 _token:$("meta[name='csrf-token']").attr('content'),
                 origem:$("input[name='origem']").val().replace(/\D/g, ''),
+                origem_estado:$("input[name='origem_estado']").val(),
+                origem_codigo_ibge:$("input[name='origem_codigo_ibge']").val(),
                 destino:$("input[name='destino']").val().replace(/\D/g, ''),
+                destino_estado:$("input[name='destino_estado']").val(),
+                destino_codigo_ibge:$("input[name='destino_codigo_ibge']").val(),
                 adicionar:($("input[name='adicionar']").is(':checked'))?1:0,
                 altura:$("input[name='altura']").val().replace(/\D/g, ''),
                 largura:$("input[name='largura']").val().replace(/\D/g, ''),

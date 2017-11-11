@@ -14,10 +14,14 @@
     <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 m-t-30">
         {!! Form::open(['id'=>'form', 'class'=>'form-horizontal']) !!}
         <div class="form-group">
-            {!! Form::text('origem', '9601028', ['id'=>'origem','class'=>'form-control cep','placeholder'=>'CEP Origem']) !!}
+            {!! Form::text('origem', '96010280', ['class'=>'form-control cep','placeholder'=>'CEP Origem']) !!}
+            {!! Form::hidden ('origem_estado', '', ['class'=>'data-estado']) !!}
+            {!! Form::hidden ('origem_codigo_ibge', '', ['class'=>'data-codigo-ibge']) !!}
         </div>
         <div class="form-group">
-            {!! Form::text('destino', '96010280', ['class'=>'form-control cep','placeholder'=>'CEP Destino']) !!}
+            {!! Form::text('destino', '50010020', ['class'=>'form-control cep','placeholder'=>'CEP Destino']) !!}
+            {!! Form::hidden ('destino_estado', '', ['class'=>'data-estado']) !!}
+            {!! Form::hidden ('destino_codigo_ibge', '', ['class'=>'data-codigo-ibge']) !!}
         </div>
 
         <div class="form-group">
