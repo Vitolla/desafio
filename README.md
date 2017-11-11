@@ -2,17 +2,17 @@
 Junte-se à casa Laravel nessa competição em busca do Code Throne!
 
 
-##Início do desafio
+## Início do desafio
 
   Para iniciar o desafio faça fork no repositório: https://github.com/melhorenvio/desafio
 
   O desafio consiste em três etapas e deve ser enviado o pull request até as 13:00 do dia 13/11/2017. Pull request com commits após esse horário serão desqualificados.
 
-##Primeira Etapa: Implementação de Transportadora
+## Primeira Etapa: Implementação de Transportadora
 
   Fazer a importação das tabelas de preços dos serviços “Econômico” e “Expresso” da “Melhor Transportadora”. As tabelas encontram-se no diretório “melhor-transportadora” no repositório.
 
-###Regras da Transportadora:
+### Regras da Transportadora:
 
 
 |                  | Mínimo | Máximo (Econômico) | Máximo (Expresso) |
@@ -40,7 +40,7 @@ Como você já deve ter percebido, para fazer o cálculo do frete será preciso 
 
 Desenvolver uma API para cotar os serviços da Melhor Transportadora.
 
-###Entrada:  
+### Entrada:  
  * CEP de Origem  
  * CEP de Destino  
  * Largura  
@@ -49,7 +49,7 @@ Desenvolver uma API para cotar os serviços da Melhor Transportadora.
  * Valor Segurado  
  * Serviços adicionais  
 
-###Saída:
+### Saída:
  * Nome do Serviço  
  * Valor  
  * Prazo  
@@ -58,11 +58,11 @@ Desenvolver uma API para cotar os serviços da Melhor Transportadora.
 
 
 
-##Terceira Etapa: Calculadora de frete
+## Terceira Etapa: Calculadora de frete
 
 Utilizando a API desenvolvida na segunda etapa, crie sua calculadora de fretes.
 
-#####Pode ser utilizado no desafio:  
+#### Pode ser utilizado no desafio:  
  * MySql  
  * PostgreSql  
  * MongoDB  
@@ -75,10 +75,10 @@ Utilizando a API desenvolvida na segunda etapa, crie sua calculadora de fretes.
  * Bootstrap  
  * Foundation  
 
-####Critérios de desempate:  
+### Critérios de desempate:  
  * Performance  
  * Hora do último commit  
  * Organização do código  
 
 
-###Fazer a criação de um README.md com a documentação para rodar o projeto desenvolvido.
+### Fazer a criação de um README.md com a documentação para rodar o projeto desenvolvido.
