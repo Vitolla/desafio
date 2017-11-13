@@ -4,7 +4,7 @@
 
 * Clonar repositório;
 * Importar Banco de Dados: - [desafiomelhorenvio](_SQL/base_desafiomelhorenvio.sql)
-
+* Abrir console na pasta do projeto;
 
 #### Fix Laravel 5.4 'npm run dev error'
 ```
@@ -21,6 +21,8 @@ composer install
 
 ```
 npm run dev
+cp .env.example .env
+artisan key:generate
 php artisan serve
 ```
 
