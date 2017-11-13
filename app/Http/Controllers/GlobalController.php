@@ -60,31 +60,40 @@ class GlobalController extends Controller
             return $retorno;
         }
 
-        if($objeto['altura'] < 2 || $objeto['altura'] > 105){
-            $retorno['mensagem'] = 'Altura incorreta';
-            return $retorno;
-        }
+        if($adicionar){
+            if($objeto['altura'] < 2 || $objeto['altura'] > 105){
+                $retorno['mensagem'] = 'Altura incorreta';
+                return $retorno;
+            }
 
-        if($objeto['largura'] < 11 || $objeto['largura'] > 105){
-            $retorno['mensagem'] = 'Largura incorreta';
-            return $retorno;
-        }
+            if($objeto['largura'] < 11 || $objeto['largura'] > 105){
+                $retorno['mensagem'] = 'Largura incorreta';
+                return $retorno;
+            }
 
-        if($objeto['comprimento'] < 16 || $objeto['comprimento'] > 105){
-            $retorno['mensagem'] = 'Comprimento incorreto';
-            return $retorno;
-        }
+            if($objeto['comprimento'] < 16 || $objeto['comprimento'] > 105){
+                $retorno['mensagem'] = 'Comprimento incorreto';
+                return $retorno;
+            }
 
-        if($objeto['peso'] < 1000 || $objeto['peso'] > 30000){
-            $retorno['mensagem'] = 'Peso incorreto';
-            return $retorno;
-        }
+            if($objeto['peso'] < 1000 || $objeto['peso'] > 30000){
+                $retorno['mensagem'] = 'Peso incorreto';
+                return $retorno;
+            }
 
-        if($objeto['valor_objeto'] < 17 || $objeto['valor_objeto'] > 10000){
-            $retorno['mensagem'] = 'Seguro incorreto';
-            return $retorno;
+            if($objeto['valor_objeto'] < 17 || $objeto['valor_objeto'] > 10000){
+                $retorno['mensagem'] = 'Seguro incorreto';
+                return $retorno;
+            }
         }
-
+        else{
+            //Se não tiver sido preenchido usar valores minimos padroes
+            $objeto['altura'] =           2;
+            $objeto['largura'] =          11;
+            $objeto['comprimento'] =      16;
+            $objeto['peso'] =             1000;
+            $objeto['valor_objeto'] =     17;
+        }
 
         //Verifica qual peso será usado para cobrança, peso da encomenda ou cubico
         $objeto['peso_cobranca'] = $objeto['peso'];
@@ -95,9 +104,13 @@ class GlobalController extends Controller
             }
         }
 
+        //Adiciona objeto pronto no retorno da api
+        $retorno['objeto'] = $objeto;
+
         //Pega transportadoras disponiveis no banco
         $transportadoras = Transportadora::get();
 
+        $retorno['resultado'] = array();
         //Passa por cada uma transportadora no banco de dados
         foreach($transportadoras as $transportadora){
             //Pega os servicos de cada transportadora
@@ -147,19 +160,22 @@ class GlobalController extends Controller
                     'valor_frete' => $valor_frete,
                     'valor_servico' => $valor_servico,
                     'valor_total' => $valor_frete+$valor_servico,
+                    'prazo' => 'Indeterminado' // <---- Não foi passado como se calcula prazo
                 );
 
             }//Fim foreach servicos
         } //Fim foreach transportadoras
 
-        //count resultados
+        //Se chegou ate aqui não encontrou erro
+        $retorno['erro'] = false;
+        //verifica se possui resultados
         if(count($retorno['resultado'])){
-            $retorno['erro'] = false;
+
             $retorno['mensagem'] = 'Ok!';
-            $retorno['objeto'] = $objeto;
         }
-
-
+        else{
+            $retorno['mensagem'] = 'Nenhuma transportadora atende as especificações solicitadas!';
+        }
         return $retorno;
     }
 
