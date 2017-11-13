@@ -2,7 +2,8 @@ $(document).ready( function() {
 
     //MASK INPUT
     $('.cep').mask('00000-000');
-    $('.numero').mask("#.##0,00", {reverse: true});
+    $('.numero').mask("#.##0", {reverse: true});
+    $('.numero-virgula').mask("#.##0,00", {reverse: true});
 
     //SHOW AND HIDE INFORMACOES ESPECIFICACOES
     $( ".especificacoes-toggle" ).click(function() {
@@ -11,6 +12,10 @@ $(document).ready( function() {
 
     //inicia um datatables padrao
     $('#example').DataTable({});
+
+    /// Tooltip mostrando regras do campo
+    $('[data-toggle="tooltip"]').tooltip();
+
 
     //QUANDO INSERE ALGUM DIGITO
     $('.cep').on("input", function() {
@@ -28,8 +33,9 @@ $(document).ready( function() {
                 success: function(data){
                     if(data.erro === true){
                         //DADOS INCORRETOS
-                        console.log('CEP não existe');
+                        alert('CEP não existe');
                         $("#btn-calcula").prop( "disabled", true );
+                        $(".submit-aviso").show();
                     }
                     else{
                         //SEM ERRO
@@ -38,14 +44,16 @@ $(document).ready( function() {
 
                         if($("#origem").val() != '' && $("#destino").val() != ''){
                             $("#btn-calcula").prop( "disabled", false );
+                            $(".submit-aviso").hide();
                         }
 
 
                     }
                 },
                 error: function(data) {
-                    console.log('Erro tente novamente mais tarde!');
+                    alert('Erro tente novamente mais tarde!');
                     $("#btn-calcula").prop( "disabled", true );
+                    $(".submit-aviso").show();
                 }
             });
         }
@@ -79,11 +87,10 @@ $(document).ready( function() {
             success: function(data){
                 if(data.erro === true){
                     //DADOS INCORRETOS
-                    console.log(data.mensagem);
+                    alert(data.mensagem);
                 }
                 else{
                     //SEM ERRO
-                    console.log('Dados Completos');
                     var html = '';
 
                     //map resultado
@@ -117,7 +124,7 @@ $(document).ready( function() {
                 }
             },
             error: function(data) {
-                console.log('Erro tente novamente mais tarde!');
+                alert('Erro tente novamente mais tarde!');
             }
         });
 

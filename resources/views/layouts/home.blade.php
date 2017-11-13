@@ -11,78 +11,106 @@
 
 @section('content')
 
-    <div id="calculadora" class="row col-xs-12">
+    <section class="container">
+        <div id="calculadora" class="row">
 
-        <h2 class="text-center">Calculadora de fretes</h2>
+            <div class="col-xs-12">
+                <h2 class="text-center">Calculadora de fretes</h2>
 
-        <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
-            {!! Form::open(['id'=>'form', 'class'=>'form-horizontal']) !!}
-            <div class="form-group">
-                {!! Form::tel('origem', '96010280', ['class'=>'form-control cep','placeholder'=>'CEP Origem']) !!}
-                {!! Form::hidden ('origem_estado', '', ['class'=>'data-estado']) !!}
-                {!! Form::hidden ('origem_codigo_ibge', '', ['id'=>'origem','class'=>'data-codigo-ibge']) !!}
-            </div>
-            <div class="form-group">
-                {!! Form::tel('destino', '50010020', ['class'=>'form-control cep','placeholder'=>'CEP Destino']) !!}
-                {!! Form::hidden ('destino_estado', '', ['class'=>'data-estado']) !!}
-                {!! Form::hidden ('destino_codigo_ibge', '', ['id'=>'destino','class'=>'data-codigo-ibge']) !!}
-            </div>
+                <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+                    {!! Form::open(['id'=>'form', 'class'=>'form-horizontal']) !!}
 
-            <div class="form-group">
-                <label class="pointer">
-                    {!! Form::checkbox('adicionar', 1, false, ['class'=>'especificacoes-toggle']) !!}
-                    Adicionar Especificaçôes
-                </label>
-            </div>
+                    <div class="form-group input-group">
+                        <span class="input-group-addon">CEP Origem</span>
+                        {!! Form::tel('origem', '', ['class'=>'form-control cep','placeholder'=>'CEP Origem']) !!}
+                        {!! Form::hidden ('origem_estado', '', ['class'=>'data-estado']) !!}
+                        {!! Form::hidden ('origem_codigo_ibge', '', ['id'=>'origem','class'=>'data-codigo-ibge']) !!}
+                    </div>
 
-            <div class="especificacoes-box row" style="display: none">
+                    <div class="form-group input-group">
+                        <span class="input-group-addon">CEP Destino</span>
+                        {!! Form::tel('destino', '', ['class'=>'form-control cep','placeholder'=>'CEP Destino']) !!}
+                        {!! Form::hidden ('destino_estado', '', ['class'=>'data-estado']) !!}
+                        {!! Form::hidden ('destino_codigo_ibge', '', ['id'=>'destino','class'=>'data-codigo-ibge']) !!}
+                    </div>
 
-                <div class="row">
-                    <div class="col-xs-6 text-center">
-                        <div class="form-group">
-                            <label class="pointer">
-                                {!! Form::checkbox('aviso_recebimento', 1, false) !!}
-                                Aviso de Recebimento (AR)
-                            </label>
+
+                    <div class="form-group text-center">
+                        <label class="pointer">
+                            {!! Form::checkbox('adicionar', 1, false, ['class'=>'especificacoes-toggle']) !!}
+                            Adicionar Especificaçôes
+                        </label>
+                    </div>
+
+                    <div class="especificacoes-box row" style="display: none">
+
+                        <div class="row">
+                            <div class="col-xs-6 text-center">
+                                <div class="form-group">
+                                    <label class="pointer">
+                                        {!! Form::checkbox('aviso_recebimento', 1, false) !!}
+                                        Aviso de Recebimento (AR)
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 text-center">
+                                <div class="form-group">
+                                    <label class="pointer">
+                                        {!! Form::checkbox('mao_propria', 1, false) !!}
+                                        Mão Própria (MP)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="form-group input-group">
+                                <span class="input-group-addon">Altura</span>
+                                {!! Form::tel('altura', '', ['class'=>'form-control numero valida','placeholder'=>'2', 'data-campo'=>'altura']) !!}
+                                <span class="input-group-addon">cm</span>
+                            </div>
+
+                            <div class="form-group input-group">
+                                <span class="input-group-addon">Largura</span>
+                                {!! Form::tel('largura', '', ['class'=>'form-control numero valida','placeholder'=>'11', 'data-campo'=>'largura']) !!}
+                                <span class="input-group-addon">cm</span>
+                            </div>
+
+                            <div class="form-group input-group">
+                                <span class="input-group-addon">Comprimento</span>
+                                {!! Form::tel('comprimento', '', ['class'=>'form-control numero valida','placeholder'=>'16', 'data-campo'=>'comprimento']) !!}
+                                <span class="input-group-addon">cm</span>
+                            </div>
+
+                            <div class="form-group input-group">
+                                <span class="input-group-addon">Peso</span>
+                                {!! Form::tel('peso', '', ['class'=>'form-control numero-virgula valida','placeholder'=>'1', 'data-toggle'=>'tooltip',  'title'=>'Para usar gramas, use a vírgula.&#013; Ex: 1,5 são 1500g.&#013; Peso minímo: 1kg', 'data-campo'=>'peso']) !!}
+                                <span class="input-group-addon">Kg</span>
+                            </div>
+
+                            <div class="form-group input-group">
+                                <span class="input-group-addon">Valor</span>
+                                {!! Form::tel('valor_objeto', '', ['class'=>'form-control numero-virgula valida','placeholder'=>'17', 'data-campo'=>'valor']) !!}
+                                <span class="input-group-addon">R$</span>
+                            </div>
+
                         </div>
                     </div>
-                    <div class="col-xs-6 text-center">
-                        <div class="form-group">
-                            <label class="pointer">
-                                {!! Form::checkbox('mao_propria', 1, false) !!}
-                                Mão Própria (MP)
-                            </label>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-xs-12">
+
                     <div class="form-group">
-                        {!! Form::tel('altura', '', ['class'=>'form-control numero','placeholder'=>'Altura']) !!}
+                        {!! Form::button('Calcular', ['id'=>'btn-calcula', 'disabled'=>'disabled']) !!}
+                        <span class="submit-aviso">Você deve preencher os 2 CEP's corretamente para calcular!</span>
                     </div>
-                    <div class="form-group">
-                        {!! Form::tel('largura', '', ['class'=>'form-control numero','placeholder'=>'Largura']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::tel('comprimento', '', ['class'=>'form-control numero','placeholder'=>'Comprimento']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::tel('peso', '', ['class'=>'form-control numero','placeholder'=>'Peso']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::tel('valor_objeto', '', ['class'=>'form-control numero','placeholder'=>'Seguro']) !!}
-                    </div>
+
+                    {!! Form::close() !!}
                 </div>
             </div>
 
-            <div class="form-group">
-                {!! Form::button('Calcular', ['id'=>'btn-calcula', 'disabled'=>'disabled']) !!}
-            </div>
-
-            {!! Form::close() !!}
         </div>
+    </section>
 
-    </div>
+
 
     <div id="resultados" class="container-fluid" style="display: none">
 
