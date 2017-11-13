@@ -32,17 +32,16 @@ class GlobalController extends Controller
 
         //Inicia a merc objeto
         $objeto = array();
-        $objeto['altura'] =           \Request::input('altura');
-        $objeto['largura'] =          \Request::input('largura');
-        $objeto['comprimento'] =      \Request::input('comprimento');
-        $objeto['peso'] =             \Request::input('peso');
-        $objeto['valor_objeto'] =     \Request::input('valor_objeto');
+        $objeto['altura'] =           \Request::input('altura', 2) != '' ? \Request::input('altura', 2) : 2;
+        $objeto['largura'] =          \Request::input('largura', 11) != '' ? \Request::input('largura', 11) : 11;
+        $objeto['comprimento'] =      \Request::input('comprimento', 16) != '' ? \Request::input('comprimento', 16) : 16;
+        $objeto['peso'] =             \Request::input('peso', 1000) != '' ? \Request::input('peso', 1000) : 1000;
+        $objeto['valor_objeto'] =     \Request::input('valor_objeto', 17) != '' ? \Request::input('valor_objeto', 17) : 17;
 
         //Servicos adicionais
         $aviso_recebimento = \Request::input('aviso_recebimento');
         $mao_propria =       \Request::input('mao_propria');
         $seguro = ($objeto['valor_objeto']>0)?true:false;
-
 
         //Cria erro generico para retorno
         $retorno['erro'] = true;
@@ -156,7 +155,7 @@ class GlobalController extends Controller
                 $retorno['resultado'][] = array(
                     'id_transportadora' => $transportadora->id,
                     'nome' => $transportadora->nome,
-                    'tipo' => $servico->tipo,
+                    'tipo' => ucfirst($servico->tipo),
                     'valor_frete' => $valor_frete,
                     'valor_servico' => $valor_servico,
                     'valor_total' => $valor_frete+$valor_servico,
