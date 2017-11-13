@@ -32,11 +32,12 @@ class GlobalController extends Controller
 
         //Inicia a merc objeto
         $objeto = array();
-        $objeto['altura'] =           \Request::input('altura', 2) != '' ? \Request::input('altura', 2) : 2;
-        $objeto['largura'] =          \Request::input('largura', 11) != '' ? \Request::input('largura', 11) : 11;
-        $objeto['comprimento'] =      \Request::input('comprimento', 16) != '' ? \Request::input('comprimento', 16) : 16;
-        $objeto['peso'] =             \Request::input('peso', 1000) != '' ? \Request::input('peso', 1000) : 1000;
-        $objeto['valor_objeto'] =     \Request::input('valor_objeto', 17) != '' ? \Request::input('valor_objeto', 17) : 17;
+        $objeto['altura'] =           \Request::input('altura') != '' ? \Request::input('altura') : 2;
+        $objeto['largura'] =          \Request::input('largura') != '' ? \Request::input('largura') : 11;
+        $objeto['comprimento'] =      \Request::input('comprimento') != '' ? \Request::input('comprimento') : 16;
+        $objeto['peso'] =             \Request::input('peso') != '' ? (\Request::input('peso')/100*1000) : 1000;
+        $objeto['valor_objeto'] =     \Request::input('valor_objeto') != '' ? \Request::input('valor_objeto')/100 : 17;
+
 
         //Servicos adicionais
         $aviso_recebimento = \Request::input('aviso_recebimento');
@@ -81,7 +82,7 @@ class GlobalController extends Controller
             }
 
             if($objeto['valor_objeto'] < 17 || $objeto['valor_objeto'] > 10000){
-                $retorno['mensagem'] = 'Seguro incorreto';
+                $retorno['mensagem'] = 'Valor incorreto';
                 return $retorno;
             }
         }
