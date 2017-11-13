@@ -67,10 +67,10 @@
                         {!! Form::text('comprimento', '', ['class'=>'form-control','placeholder'=>'Comprimento']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::text('peso', '', ['class'=>'form-control','placeholder'=>'Peso']) !!}
+                        {!! Form::text('peso', '', ['class'=>'form-control money','placeholder'=>'Peso']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::text('valor_objeto', '', ['class'=>'form-control','placeholder'=>'Seguro']) !!}
+                        {!! Form::text('valor_objeto', '', ['class'=>'form-control money','placeholder'=>'Seguro']) !!}
                     </div>
                 </div>
             </div>
