@@ -122,7 +122,7 @@
                 <tr>
                     <th>Nome</th>
                     <th>Tipo</th>
-                    <th>Valor</th>
+                    <th>Valor (R$)</th>
                     <th>Prazo</th>
                 </tr>
                 </thead>
