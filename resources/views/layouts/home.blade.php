@@ -32,6 +32,26 @@
         </div>
 
         <div class="especificacoes-box row" style="display: none">
+
+            <div class="row">
+                <div class="col-xs-6 text-center">
+                    <div class="form-group">
+                        <label>
+                            {!! Form::checkbox('aviso_recebimento', 1, false) !!}
+                            Aviso de Recebimento (AR)
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xs-6 text-center">
+                    <div class="form-group">
+                        <label>
+                            {!! Form::checkbox('mao_propria', 1, false) !!}
+                            Mão Própria (MP)
+                        </label>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-xs-12">
                 <div class="form-group">
                     {!! Form::text('altura', '10', ['class'=>'form-control','placeholder'=>'Altura']) !!}
@@ -46,7 +66,7 @@
                     {!! Form::text('peso', '500', ['class'=>'form-control','placeholder'=>'Peso']) !!}
                 </div>
                 <div class="form-group">
-                    {!! Form::text('seguro', '', ['class'=>'form-control','placeholder'=>'Seguro']) !!}
+                    {!! Form::text('valor_objeto', '', ['class'=>'form-control','placeholder'=>'Seguro']) !!}
                 </div>
             </div>
         </div>

@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RegrasExpresso extends Model
+class Servicos extends Model
 {
-    protected $table = 'regras_expresso';
+    protected $table = 'servicos';
 
     public function transportadora()
     {

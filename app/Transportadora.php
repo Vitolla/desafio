@@ -6,21 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transportadora extends Model
 {
-    protected $table = 'transportadora';
+    protected $table = 'transportadoras';
 
     public function servicos()
     {
-        return $this->hasMany('App\ServicoAdicional');
+        return $this->hasMany('App\Servicos');
     }
 
-    public function regras_economico()
+    public function servicos_adicionais()
     {
-        return $this->hasOne('App\RegrasEconomico');
-    }
-
-    public function regras_expresso()
-    {
-        return $this->hasOne('App\RegrasExpresso');
+        return $this->hasMany('App\ServicosAdicionais');
     }
 
     public function valores()

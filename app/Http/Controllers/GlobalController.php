@@ -6,9 +6,8 @@ use Illuminate\Http\Request;
 
 use \App\Transportadora;
 use \App\OrigemDestino;
-use \App\ServicoAdicional;
-use \App\RegrasEconomico;
-use \App\RegrasExpresso;
+use \App\Servicos;
+use \App\ServicosAdicionais;
 use \App\Valores;
 
 class GlobalController extends Controller
@@ -20,6 +19,8 @@ class GlobalController extends Controller
 
     public function calcula()
     {
+
+        //Pega todos os parametros enviados
         $origem =            \Request::input('origem');
         $origemEstado =      \Request::input('origem_estado');
         $origemCodigoIBGE =  \Request::input('origem_codigo_ibge');
@@ -29,44 +30,151 @@ class GlobalController extends Controller
 
         $adicionar =         \Request::input('adicionar');
 
-        $altura =       \Request::input('altura');
-        $largura =      \Request::input('largura');
-        $comprimento =  \Request::input('comprimento');
-        $peso =         \Request::input('peso');
-        $seguro =       \Request::input('seguro');
-        $ar =           \Request::input('ar');
-        $mp =           \Request::input('mp');
+        //Inicia a merc objeto
+        $objeto = array();
+        $objeto['altura'] =           \Request::input('altura');
+        $objeto['largura'] =          \Request::input('largura');
+        $objeto['comprimento'] =      \Request::input('comprimento');
+        $objeto['peso'] =             \Request::input('peso');
+        $objeto['valor_objeto'] =     \Request::input('valor_objeto');
+
+        //Servicos adicionais
+        $aviso_recebimento = \Request::input('aviso_recebimento');
+        $mao_propria =       \Request::input('mao_propria');
+        $seguro = ($objeto['valor_objeto']>0)?true:false;
 
 
+        //Cria erro generico para retorno
+        $retorno['erro'] = true;
+        $retorno['mensagem'] = 'Erro genérico';
 
 
-        //Verifica se destino é capital
-        if($this->isCapital($destinoEstado,$destinoCodigoIBGE)){
+        //Valida campos
+        if(!$origemEstado && !$origemCodigoIBGE){
+            $retorno['mensagem'] = 'CEP de origem incorreto';
+            return $retorno;
+        }
 
+        if(!$destinoEstado && !$destinoCodigoIBGE){
+            $retorno['mensagem'] = 'CEP de destino incorreto';
+            return $retorno;
+        }
+
+        if($objeto['altura'] < 2 || $objeto['altura'] > 105){
+            $retorno['mensagem'] = 'Altura incorreta';
+            return $retorno;
+        }
+
+        if($objeto['largura'] < 11 || $objeto['largura'] > 105){
+            $retorno['mensagem'] = 'Largura incorreta';
+            return $retorno;
+        }
+
+        if($objeto['comprimento'] < 16 || $objeto['comprimento'] > 105){
+            $retorno['mensagem'] = 'Comprimento incorreto';
+            return $retorno;
+        }
+
+        if($objeto['peso'] < 1000 || $objeto['peso'] > 30000){
+            $retorno['mensagem'] = 'Peso incorreto';
+            return $retorno;
+        }
+
+        if($objeto['valor_objeto'] < 17 || $objeto['valor_objeto'] > 10000){
+            $retorno['mensagem'] = 'Seguro incorreto';
+            return $retorno;
         }
 
 
+        //Verifica qual peso será usado para cobrança, peso da encomenda ou cubico
+        $objeto['peso_cobranca'] = $objeto['peso'];
+        $objeto['peso_cubico'] = $this->calculaPesoCubico($objeto);
+        if($objeto['peso_cubico'] > 10000){
+            if($objeto['peso_cubico'] > $objeto['peso']){
+                $objeto['peso_cobranca'] = $objeto['peso_cubico'];
+            }
+        }
 
-        $test[]=$origem;
-        $test[]=$destino;
-        $test[]=$adicionar;
-        $test[]=$altura;
-        $test[]=$largura;
-        $test[]=$comprimento;
-        $test[]=$peso;
-        $test[]=$seguro;
-        $test[]=$ar;
-        $test[]=$mp;
+        //Pega transportadoras disponiveis no banco
+        $transportadoras = Transportadora::get();
 
-        $novo[] = $this->isCapital($origemEstado,$origemCodigoIBGE);
-        $novo[] = $this->isCapital($destinoEstado,$destinoCodigoIBGE);
+        //Passa por cada uma transportadora no banco de dados
+        foreach($transportadoras as $transportadora){
+            //Pega os servicos de cada transportadora
+            foreach($transportadora->servicos as $servico){
 
-        return $this->calculaValorTransporte($origemEstado, $origemCodigoIBGE, $destinoEstado, $destinoCodigoIBGE, $tipo='economico');
-//        return $this->calculaValorTransporte($origemEstado, $origemCodigoIBGE, $destinoEstado, $destinoCodigoIBGE, $tipo='expresso');
+                //Verifica se objeto esta de acordo com as regras do servico da transportadora, se cair em alguma excessao não utiliza servico
+                if($objeto['altura'] < $servico->altu_min || $objeto['altura'] > $servico->altu_max){
+                    continue;
+                }
 
-        return $novo;
+                if($objeto['largura'] < $servico->larg_min || $objeto['largura'] > $servico->larg_max){
+                    continue;
+                }
+
+                if($objeto['comprimento'] < $servico->comp_min || $objeto['comprimento'] > $servico->comp_max){
+                    continue;
+                }
+
+                if($objeto['peso'] < $servico->peso_min || $objeto['peso'] > $servico->peso_max){
+                    continue;
+                }
+
+                if($objeto['valor_objeto'] < $servico->segu_min || $objeto['valor_objeto'] > $servico->segu_max){
+                    continue;
+                }
+
+                //Se passou por todas excessoes do servico calcula valores de frete
+                $valor_frete = 0;
+                $valor_frete = $this->calculaValorTransporte($origemEstado, $origemCodigoIBGE, $destinoEstado, $destinoCodigoIBGE, $servico->tipo, $objeto['peso_cobranca']);
+
+                //Verifica se foi solicitado servico adicional
+                $valor_servico = 0;
+                if($aviso_recebimento){
+                    $valor_servico = $this->adicionaServico(1, $objeto['valor_objeto'], $valor_frete);
+                }
+                if($mao_propria){
+                    $valor_servico = $this->adicionaServico(2, $objeto['valor_objeto'], $valor_frete);
+                }
+                if($seguro){
+                    $valor_servico = $this->adicionaServico(3, $objeto['valor_objeto'], $valor_frete, $objeto['peso_cobranca']);
+                }
+
+                $retorno['resultado'][] = array(
+                    'id_transportadora' => $transportadora->id,
+                    'nome' => $transportadora->nome,
+                    'tipo' => $servico->tipo,
+                    'valor_frete' => $valor_frete,
+                    'valor_servico' => $valor_servico,
+                    'valor_total' => $valor_frete+$valor_servico,
+                );
+
+            }//Fim foreach servicos
+        } //Fim foreach transportadoras
+
+        //count resultados
+        if(count($retorno['resultado'])){
+            $retorno['erro'] = false;
+            $retorno['mensagem'] = 'Ok!';
+            $retorno['objeto'] = $objeto;
+        }
+
+
+        return $retorno;
     }
 
+
+    //Funcao para calcular o peso cubico
+    //Parametros entrada altura, largura e comprimento
+    //Retorno Peso Cubico
+    public function calculaPesoCubico($objeto){
+        $peso_cubico = ($objeto['altura'] * $objeto['largura'] * $objeto['comprimento']) / 6000;
+
+        // Arredonda resultado pra cima
+        $peso_cubico = ceil($peso_cubico) * 1000;
+
+        return $peso_cubico;
+    }
 
     //Funcao para verificar se regiao é capital
     //Entra estado e codigo do ibge
@@ -106,69 +214,99 @@ class GlobalController extends Controller
     }
 
     //Funcao para verificar o preco total do envio
-    //Parametros tipo de transporte, estado de origem, codigo ibge de origem, estado de destino, codigo ibge de destino e peso
+    //Parametros entrada tipo de transporte, estado de origem, codigo ibge de origem, estado de destino, codigo ibge de destino e peso
     //Retorno Valor Total do Transporte
     public function calculaValorTransporte($origemEstado, $origemCodigoIBGE, $destinoEstado, $destinoCodigoIBGE, $tipo='economico', $peso=0){
 
         $valorTotal = 0;
 
+        //Pega o indicador do trecho
+        $indicadorTrecho= OrigemDestino::where('origem', $origemEstado)->where('destino', $destinoEstado)->first();
+
         //Verifica se origem e destino são mesma cidade
         if( $origemCodigoIBGE == $destinoCodigoIBGE ){
-            $indicador = OrigemDestino::where('origem', $origemEstado)->where('destino', $destinoEstado)->first();
-
-            if($tipo=='economico'){$indicador = 'e'.$indicador->indicador;}
-            if($tipo=='expresso'){$indicador = 'l'.$indicador->indicador;}
-
-            $valor = Valores::where('tipo',$tipo)
-                ->where('peso_min','<=',$peso)
-                ->where('peso_max','>=',$peso)
-                ->first();
-            $valorTotal = $valor->{$indicador};
+            if($tipo=='economico'){$indicador = 'e'.$indicadorTrecho->indicador;}
+            if($tipo=='expresso'){$indicador = 'l'.$indicadorTrecho->indicador;}
         }
 
         //Verifica se origem e destino são do mesmo estado
         else if($origemEstado == $destinoEstado && $origemCodigoIBGE != $destinoCodigoIBGE){
-
-            $indicador = OrigemDestino::where('origem', $origemEstado)->where('destino', $destinoEstado)->first();
-            $indicador = 'e'.$indicador->indicador;
-
-            $valor = Valores::where('tipo',$tipo)
-                ->where('peso_min','<=',$peso)
-                ->where('peso_max','>=',$peso)
-                ->first();
-
-            $valorTotal = $valor->{$indicador};
+            $indicador = 'e'.$indicadorTrecho->indicador;
         }
 
         //Verifica se origem e destino são de estados diferentes, e ambas capitais
         else if($origemEstado != $destinoEstado && $this->isCapital($origemEstado,$origemCodigoIBGE) && $this->isCapital($destinoEstado,$destinoCodigoIBGE)){
-
-            $indicador = OrigemDestino::where('origem', $origemEstado)->where('destino', $destinoEstado)->first();
-            $indicador = 'n'.$indicador->indicador;
-
-            $valor = Valores::where('tipo',$tipo)
-                ->where('peso_min','<=',$peso)
-                ->where('peso_max','>=',$peso)
-                ->first();
-
-            $valorTotal = $valor->{$indicador};
+            $indicador = 'n'.$indicadorTrecho->indicador;
         }
 
         //Demais trechos interestaduais
         else{
-            $indicador = OrigemDestino::where('origem', $origemEstado)->where('destino', $destinoEstado)->first();
-            $indicador = 'i'.$indicador->indicador;
-
-            $valor = Valores::where('tipo',$tipo)
-                ->where('peso_min','<=',$peso)
-                ->where('peso_max','>=',$peso)
-                ->first();
-
-            $valorTotal = $valor->{$indicador};
+            $indicador = 'i'.$indicadorTrecho->indicador;
         }
 
+        //Verifica se peso ultrapassa limite 10kg
+        $pesoUltrapassado = false;
+        if($peso > 10000){
+            $pesoUltrapassado = true;
+            $pesoRemanescente = $peso-10000;
 
-        return array($indicador,$valorTotal);
+            //Seta peso para o valor maximo de cobranca por trecho
+            $peso = 10000;
+        }
+
+        //Calcula o valor do frete baseado no indicador recebido
+        $valor = Valores::where('tipo',$tipo)
+            ->where('peso_min','<=',$peso)
+            ->where('peso_max','>=',$peso)
+            ->first();
+        $valorTotal = $valor->{$indicador};
+
+        //Verifica se peso esta acima de 10kg, se sim soma com o valor adicional por kg
+        if($pesoUltrapassado){
+            $valor = Valores::withoutGlobalScopes()->where('tipo',$tipo)->where('kg_adicional',1)->first();
+
+            //Loop para adicionar cobrança em peso remanescente
+            while($pesoRemanescente > 0){
+                $valorTotal = $valorTotal + $valor->{$indicador};
+                $pesoRemanescente = $pesoRemanescente - 1000;
+            }
+        }
+
+        return $valorTotal;
+    }
+
+    //Funcao para adicionar servicos adicionais
+    //Parametros entrada valor
+    //Retorno Valor Total
+    public function adicionaServico($idServico, $valor_objeto, $valor_frete, $peso_objeto=0){
+        $valor_servico = 0;
+        //Pega servico solicitado
+        $servico_adicional = ServicosAdicionais::find($idServico);
+
+        //Aplica valor conforme regra de servico adicional oferecido
+        if($servico_adicional->aplicacao == 'frete'){
+            $valor_servico = $valor_frete * $servico_adicional->valor;
+        }
+        if($servico_adicional->aplicacao == 'total'){
+            $valor_servico = $servico_adicional->valor;
+        }
+        if($servico_adicional->aplicacao == 'mercadoria'){
+            $valor_servico = $valor_objeto * $servico_adicional->valor;
+        }
+
+        //Condicao especial se solicitar seguro e for carga valiosa
+        if($idServico == 3){
+            //Evitar erro de divisao por zero
+            if($peso_objeto>0){
+                //Carga valiosa: 1% do valor da mercadoria, para os casos em que o valor da mercadoria divididos pelos quilos do produto resulta em mais de R$3.000 por quilo.
+                if(($valor_objeto / ($peso_objeto/1000)) > 3000){
+                    $carga_valiosa = ServicosAdicionais::find(4);
+                    $valor_servico = $valor_servico + ($valor_objeto * $carga_valiosa->valor);
+                }
+            }
+        }
+
+        return $valor_servico;
     }
 
 

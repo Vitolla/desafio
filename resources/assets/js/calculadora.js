@@ -1,4 +1,3 @@
-var teste;
 $(document).ready( function() {
 
     //MASK INPUT
@@ -64,7 +63,9 @@ $(document).ready( function() {
                 largura:$("input[name='largura']").val().replace(/\D/g, ''),
                 comprimento:$("input[name='comprimento']").val().replace(/\D/g, ''),
                 peso:$("input[name='peso']").val().replace(/\D/g, ''),
-                seguro:$("input[name='seguro']").val().replace(/\D/g, '')
+                valor_objeto:$("input[name='valor_objeto']").val().replace(/\D/g, ''),
+                aviso_recebimento:($("input[name='aviso_recebimento']").is(':checked'))?1:0,
+                mao_propria:($("input[name='mao_propria']").is(':checked'))?1:0,
             },
             success: function(data){
                 if(data.erro === true){
