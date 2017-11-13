@@ -18,12 +18,12 @@
         <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
             {!! Form::open(['id'=>'form', 'class'=>'form-horizontal']) !!}
             <div class="form-group">
-                {!! Form::text('origem', '96010280', ['class'=>'form-control cep','placeholder'=>'CEP Origem']) !!}
+                {!! Form::tel('origem', '96010280', ['class'=>'form-control cep','placeholder'=>'CEP Origem']) !!}
                 {!! Form::hidden ('origem_estado', '', ['class'=>'data-estado']) !!}
                 {!! Form::hidden ('origem_codigo_ibge', '', ['id'=>'origem','class'=>'data-codigo-ibge']) !!}
             </div>
             <div class="form-group">
-                {!! Form::text('destino', '50010020', ['class'=>'form-control cep','placeholder'=>'CEP Destino']) !!}
+                {!! Form::tel('destino', '50010020', ['class'=>'form-control cep','placeholder'=>'CEP Destino']) !!}
                 {!! Form::hidden ('destino_estado', '', ['class'=>'data-estado']) !!}
                 {!! Form::hidden ('destino_codigo_ibge', '', ['id'=>'destino','class'=>'data-codigo-ibge']) !!}
             </div>
@@ -58,19 +58,19 @@
 
                 <div class="col-xs-12">
                     <div class="form-group">
-                        {!! Form::text('altura', '', ['class'=>'form-control','placeholder'=>'Altura']) !!}
+                        {!! Form::tel('altura', '', ['class'=>'form-control numero','placeholder'=>'Altura']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::text('largura', '', ['class'=>'form-control','placeholder'=>'Largura']) !!}
+                        {!! Form::tel('largura', '', ['class'=>'form-control numero','placeholder'=>'Largura']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::text('comprimento', '', ['class'=>'form-control','placeholder'=>'Comprimento']) !!}
+                        {!! Form::tel('comprimento', '', ['class'=>'form-control numero','placeholder'=>'Comprimento']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::text('peso', '', ['class'=>'form-control money','placeholder'=>'Peso']) !!}
+                        {!! Form::tel('peso', '', ['class'=>'form-control numero','placeholder'=>'Peso']) !!}
                     </div>
                     <div class="form-group">
-                        {!! Form::text('valor_objeto', '', ['class'=>'form-control money','placeholder'=>'Seguro']) !!}
+                        {!! Form::tel('valor_objeto', '', ['class'=>'form-control numero','placeholder'=>'Seguro']) !!}
                     </div>
                 </div>
             </div>

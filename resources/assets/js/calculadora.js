@@ -2,7 +2,7 @@ $(document).ready( function() {
 
     //MASK INPUT
     $('.cep').mask('00000-000');
-    $('.money').mask('000.000.000.000.000,00');
+    $('.numero').mask("#.##0,00", {reverse: true});
 
     //SHOW AND HIDE INFORMACOES ESPECIFICACOES
     $( ".especificacoes-toggle" ).click(function() {
