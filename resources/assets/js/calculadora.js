@@ -8,6 +8,8 @@ $(document).ready( function() {
         $(".especificacoes-box").slideToggle();
     });
 
+    //inicia um datatables padrao
+    $('#example').DataTable({});
 
     //QUANDO INSERE ALGUM DIGITO
     $('.cep').on("input", function() {
@@ -26,25 +28,31 @@ $(document).ready( function() {
                     if(data.erro === true){
                         //DADOS INCORRETOS
                         console.log('CEP não existe');
+                        $("#btn-calcula").prop( "disabled", true );
                     }
                     else{
                         //SEM ERRO
-                        console.log(data);
                         elemento.parent().find(".data-estado").val(data.uf);
                         elemento.parent().find(".data-codigo-ibge").val(data.ibge);
+
+                        if($("#origem").val() != '' && $("#destino").val() != ''){
+                            $("#btn-calcula").prop( "disabled", false );
+                        }
+
+
                     }
                 },
                 error: function(data) {
                     console.log('Erro tente novamente mais tarde!');
+                    $("#btn-calcula").prop( "disabled", true );
                 }
             });
         }
 
     });
 
-    $("#form").submit(function(e){
+    $("#btn-calcula").click(function(e){
         e.preventDefault();
-        console.log('click');
 
         $.ajax({
             type: "POST",
@@ -70,11 +78,41 @@ $(document).ready( function() {
             success: function(data){
                 if(data.erro === true){
                     //DADOS INCORRETOS
-                    console.log('Dados Incompletos');
+                    console.log(data.mensagem);
                 }
                 else{
                     //SEM ERRO
                     console.log('Dados Completos');
+                    var html = '';
+
+                    //map resultado
+                    $.map( data.resultado, function( val, i ) {
+                        html += '<tr>';
+                        html += ' <td>'+val.nome+'</td>';
+                        html += ' <td>'+val.tipo+'</td>';
+                        html += ' <td>'+val.valor_total+'</td>';
+                        html += ' <td>'+val.prazo+'</td>';
+                        html += '</tr>';
+                    });
+
+                    //Destroi datatables antigo
+                    $('#example').DataTable().destroy();
+
+                    //Insere resultado na tabela
+                    $('#resultado_body').html(html);
+
+                    //Inicia novo Datatables
+                    $('#example').DataTable({
+                        "searching": false, // <- remove barra de pesquisa
+                        "paging": false, // <-- remove paginacao
+                        "bInfo" : false, // <-- remove informacao de rodape
+                        "order": [[ 2, "asc" ]], // <-- ordena do menor ao maior preco
+                    });
+
+                    //Esconde calculadora e mostra resultados
+                    $("#calculadora").fadeOut(function(){
+                        $("#resultados").fadeIn();
+                    });
                 }
             },
             error: function(data) {
@@ -82,6 +120,14 @@ $(document).ready( function() {
             }
         });
 
+    });
+
+    //Calcular de novo
+    $("#btn-calcula-denovo").click(function(){
+        //Esconde resultados e mostra calculadora
+        $("#resultados").fadeOut(function(){
+            $("#calculadora").fadeIn();
+        });
     });
 
 });

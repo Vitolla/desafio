@@ -9,12 +9,11 @@
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
 /// ESTILOS DO TESTE
-.flex-center {
-  align-items: center;
-  display: flex;
-  justify-content: center;
+button[disabled],
+html input[disabled] {
+  cursor: no-drop;
 }
 
-.m-t-30 {
-  margin-bottom: 30px;
+.pointer{
+  cursor: pointer;
 }

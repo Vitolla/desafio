@@ -18,6 +18,10 @@
 
         </div>
 
+        <div class="container-fluid">
+            <p class="text-center">Desafio desenvolvido por <a href="mailto:vitor.vitolla@gmail.com"><b>Vitor Vitolla</b></a></p>
+        </div>
+
         <script type="text/javascript">
             var baseUrl = '{{url('/')}}';
         </script>
